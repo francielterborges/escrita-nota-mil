@@ -291,15 +291,39 @@ h1, h2, h3, h4, h5, h6 {
 /* Responsividade */
 @media (max-width: 992px) {
     .section-hero {
-        background: 
-            linear-gradient(0deg, var(--color-orange) 10%, rgba(255, 109, 0, 0.6) 50%, rgba(255, 109, 0, 0.8) 100%),
-            url('hero-composite.jpg') no-repeat center / cover;
+        background: linear-gradient(180deg, var(--color-orange-light) 0%, var(--color-orange) 100%);
         text-align: center;
+        padding: 6rem 0;
+        min-height: auto;
     }
+    
+    .hero-container {
+        flex-direction: column;
+    }
+    
+    .hero-content {
+        max-width: 100%;
+    }
+    
+    .hero-body {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    .hero-cta-wrapper {
+        align-items: center;
+        width: 100%;
+    }
+    
     .hero-visual {
-        width: 150px;
-        right: 10%;
-        bottom: 10%;
+        position: relative;
+        right: auto;
+        bottom: auto;
+        width: 80%;
+        max-width: 300px;
+        margin: 2rem auto 0;
+        opacity: 0.8;
+        transform: rotate(0);
     }
 }
 
