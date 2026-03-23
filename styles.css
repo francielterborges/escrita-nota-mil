@@ -224,7 +224,33 @@ h1, h2, h3, h4, h5, h6 {
     text-transform: uppercase;
     letter-spacing: 2px;
     font-size: 0.9rem;
-    margin-bottom: 1rem;
+}
+
+.hero-badges {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.badge-acerto {
+    background-color: var(--color-white);
+    color: var(--color-orange);
+    padding: 0.4rem 1rem;
+    border-radius: var(--shape-pill);
+    font-family: var(--font-headline);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
 .hero-headline {
@@ -452,17 +478,37 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 4rem;
 }
 
-.testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+.testimonials-slider {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    overflow: hidden;
+    padding: 2rem 0;
+    position: relative;
+    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.testimonials-track {
+    display: flex;
     gap: 2rem;
-    margin-bottom: 6rem;
+    width: max-content;
+    animation: scroll-testimonials 50s linear infinite;
+    padding: 0 1rem;
+}
+
+.testimonials-track:hover {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-testimonials {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
 }
 
 .testimonial-card {
+    flex: 0 0 400px;
     background-color: var(--color-white);
     border: 2px solid rgba(255, 109, 0, 0.1);
-    border-radius: 40px; /* Semi-pill to accommodate content */
+    border-radius: 40px;
     padding: 3rem 2rem;
     display: flex;
     flex-direction: column;
@@ -474,6 +520,7 @@ h1, h2, h3, h4, h5, h6 {
 .testimonial-card:hover {
     border-color: rgba(255, 109, 0, 0.4);
     box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transform: translateY(-5px);
 }
 
 .student-photo {
