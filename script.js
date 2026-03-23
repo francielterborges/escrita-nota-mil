@@ -40,4 +40,55 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = '';
         });
     });
+    // Slider Navigation
+    const track = document.querySelector('.testimonials-track');
+    const prevBtn = document.querySelector('.slider-btn.prev');
+    const nextBtn = document.querySelector('.slider-btn.next');
+    
+    if (track && prevBtn && nextBtn) {
+        let currentTranslate = 0;
+        let isManual = false;
+
+        const getCardWidth = () => {
+            const card = document.querySelector('.testimonial-card');
+            const style = window.getComputedStyle(card);
+            const gap = parseFloat(window.getComputedStyle(track).gap) || 0;
+            return card.offsetWidth + gap;
+        };
+
+        const moveSlider = (direction) => {
+            if (!isManual) {
+                // Stop CSS animation
+                const computedStyle = window.getComputedStyle(track);
+                const matrix = new WebKitCSSMatrix(computedStyle.transform);
+                currentTranslate = matrix.m41;
+                
+                track.classList.add('no-animation');
+                track.style.transform = `translateX(${currentTranslate}px)`;
+                isManual = true;
+            }
+
+            const cardWidth = getCardWidth();
+            
+            if (direction === 'next') {
+                currentTranslate -= cardWidth;
+            } else {
+                currentTranslate += cardWidth;
+            }
+
+            // Boundary checks for the loop
+            const totalWidth = track.offsetWidth / 2; // Because we duplicated cards
+            if (Math.abs(currentTranslate) >= totalWidth) {
+                currentTranslate = 0;
+            } else if (currentTranslate > 0) {
+                currentTranslate = -totalWidth + cardWidth;
+            }
+
+            track.style.transition = 'transform 0.5s ease-out';
+            track.style.transform = `translateX(${currentTranslate}px)`;
+        };
+
+        prevBtn.addEventListener('click', () => moveSlider('prev'));
+        nextBtn.addEventListener('click', () => moveSlider('next'));
+    }
 });
