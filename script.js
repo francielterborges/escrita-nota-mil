@@ -41,54 +41,85 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     // Slider Navigation
+    const slider = document.querySelector('.testimonials-slider');
     const track = document.querySelector('.testimonials-track');
     const prevBtn = document.querySelector('.slider-btn.prev');
     const nextBtn = document.querySelector('.slider-btn.next');
     
     if (track && prevBtn && nextBtn) {
         let currentTranslate = 0;
-        let isManual = false;
+        let isManual = window.innerWidth <= 768; // Start manual on mobile
+        let currentIndex = 0;
+
+        if (isManual) {
+            track.classList.add('no-animation');
+        }
 
         const getCardWidth = () => {
             const card = document.querySelector('.testimonial-card');
-            const style = window.getComputedStyle(card);
             const gap = parseFloat(window.getComputedStyle(track).gap) || 0;
             return card.offsetWidth + gap;
         };
 
+        const updateSliderPosition = () => {
+            const cardWidth = getCardWidth();
+            const containerWidth = slider.offsetWidth;
+            
+            if (window.innerWidth <= 768) {
+                // Center the card on mobile
+                currentTranslate = (containerWidth / 2) - (cardWidth / 2) - (currentIndex * cardWidth);
+            } else {
+                // Simple translate for desktop manual mode
+                currentTranslate = -(currentIndex * cardWidth);
+            }
+
+            track.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+            track.style.transform = `translateX(${currentTranslate}px)`;
+        };
+
         const moveSlider = (direction) => {
             if (!isManual) {
-                // Stop CSS animation
+                // Capture current position from animation before stopping
                 const computedStyle = window.getComputedStyle(track);
                 const matrix = new WebKitCSSMatrix(computedStyle.transform);
-                currentTranslate = matrix.m41;
+                const x = matrix.m41;
                 
                 track.classList.add('no-animation');
-                track.style.transform = `translateX(${currentTranslate}px)`;
+                track.style.transform = `translateX(${x}px) translateZ(0)`;
                 isManual = true;
+                
+                // Find nearest index
+                const cardWidth = getCardWidth();
+                currentIndex = Math.round(Math.abs(x) / cardWidth);
             }
 
-            const cardWidth = getCardWidth();
-            
             if (direction === 'next') {
-                currentTranslate -= cardWidth;
+                currentIndex++;
             } else {
-                currentTranslate += cardWidth;
+                currentIndex--;
             }
 
-            // Boundary checks for the loop
-            const totalWidth = track.offsetWidth / 2; // Because we duplicated cards
-            if (Math.abs(currentTranslate) >= totalWidth) {
-                currentTranslate = 0;
-            } else if (currentTranslate > 0) {
-                currentTranslate = -totalWidth + cardWidth;
-            }
+            // Boundary checks
+            const cards = document.querySelectorAll('.testimonial-card');
+            if (currentIndex >= cards.length) currentIndex = 0;
+            if (currentIndex < 0) currentIndex = cards.length - 1;
 
-            track.style.transition = 'transform 0.5s ease-out';
-            track.style.transform = `translateX(${currentTranslate}px)`;
+            updateSliderPosition();
         };
 
         prevBtn.addEventListener('click', () => moveSlider('prev'));
         nextBtn.addEventListener('click', () => moveSlider('next'));
+
+        // Initial reposition for mobile
+        if (window.innerWidth <= 768) {
+            setTimeout(updateSliderPosition, 100);
+        }
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+            if (isManual || window.innerWidth <= 768) {
+                updateSliderPosition();
+            }
+        });
     }
 });

@@ -493,6 +493,7 @@ h1, h2, h3, h4, h5, h6 {
     width: max-content;
     animation: scroll-testimonials 50s linear infinite;
     padding: 0 1rem;
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .testimonials-track:hover {
@@ -547,6 +548,11 @@ h1, h2, h3, h4, h5, h6 {
     
     .testimonials-slider {
         mask-image: none; /* Remove mask on mobile for better visibility with buttons */
+    }
+
+    .testimonials-track {
+        animation: none !important;
+        padding: 0;
     }
 }
 
@@ -803,6 +809,10 @@ h1, h2, h3, h4, h5, h6 {
     .stats-container {
         flex-direction: column;
         gap: 2rem;
+    }
+    .testimonial-card {
+        flex: 0 0 85vw;
+        padding: 2rem 1.5rem;
     }
 }
 
